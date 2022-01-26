@@ -17,7 +17,6 @@
 package com.example.android.hilt.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,10 +24,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.hilt.LogApplication
 import com.example.android.hilt.R
 import com.example.android.hilt.data.Log
-import com.example.android.hilt.data.LoggerLocalDataSource
+import com.example.android.hilt.data.LoggerDataSource
+import com.example.android.hilt.di.InMemoryLogger
 import com.example.android.hilt.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -48,10 +47,11 @@ class LogsFragment : Fragment() {
     *To perform field injection, use the @Inject annotation on Android class fields you want to be injected by Hilt.
     * Warning: Fields injected by Hilt cannot be private.
     * */
-    @Inject
-    lateinit var logger: LoggerLocalDataSource
-    @Inject
-    lateinit var dateFormatter: DateFormatter
+    // If you want to change the database implementation you want to use, you just need to annotate the injected fields with @DatabaseLogger instead of @InMemoryLogger.
+    @InMemoryLogger
+    @Inject lateinit var logger: LoggerDataSource
+
+    @Inject lateinit var dateFormatter: DateFormatter
 
     private lateinit var recyclerView: RecyclerView
 

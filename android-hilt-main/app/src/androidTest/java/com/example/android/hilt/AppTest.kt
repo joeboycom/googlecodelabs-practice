@@ -26,19 +26,25 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.example.android.hilt.ui.MainActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers.containsString
 import org.junit.After
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class AppTest {
 
-    @After
-    fun tearDown() {
-        // Remove logs after the test finishes
-        ServiceLocator(getInstrumentation().targetContext).loggerLocalDataSource.removeLogs()
-    }
+    // To learn more about testing and features such as field injection or replacing bindings in tests, check out:
+    // https://developer.android.com/training/dependency-injection/hilt-testing
+
+    // 1. Be annotated with @HiltAndroidTest which is responsible for generating the Hilt components for each test
+    // 2. Use the HiltAndroidRule that manages the components' state and is used to perform injection on your test.
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     @Test
     fun happyPath() {

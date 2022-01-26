@@ -21,10 +21,18 @@ import android.os.Looper
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Data manager class that handles data manipulation between the database and the UI.
  */
+
+/*
+* 6. Scoping instances to containers
+* The annotation that scopes an instance to the application container is @Singleton.
+* This annotation will make the application container always provide the same instance regardless of whether the type is used as a dependency of another type or if it needs to be field injected.
+* */
+@Singleton
 class LoggerLocalDataSource @Inject constructor(private val logDao: LogDao) {
 
     private val executorService: ExecutorService = Executors.newFixedThreadPool(4)

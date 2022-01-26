@@ -17,7 +17,14 @@
 package com.example.android.hilt
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
+/*
+* 4. Hilt in your Application class
+* Similarly to how the instance of ServiceLocator in the LogApplication class is used and initialized, to add a container that is attached to the app's lifecycle,
+* we need to annotate the Application class with @HiltAndroidApp
+* */
+@HiltAndroidApp
 class LogApplication : Application() {
 
     lateinit var serviceLocator: ServiceLocator

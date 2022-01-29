@@ -10,3 +10,8 @@
 * [Using Hilt in your Android app](https://developer.android.com/codelabs/android-hilt#0)
 * [android-hilt-main](https://github.com/googlecodelabs/android-hilt/tree/main)
 * `android-hilt-main` has records how to implement Hilt into a simple logger project.
+
+### Compose
+* [Jetpack Compose basics](https://developer.android.com/codelabs/jetpack-compose-basics?hl=en#0)
+* [Jetpack Compose Navigation](https://developer.android.com/codelabs/jetpack-compose-navigation?hl=en#0)
+* [Layouts in Jetpack Compose](https://developer.android.com/codelabs/jetpack-compose-layouts?hl=en#0)

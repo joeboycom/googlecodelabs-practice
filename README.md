@@ -1,6 +1,6 @@
 # googlecodelabs-practice
 
-[Google Developers Codelabs](https://codelabs.developers.google.com/) provide a bunch of guided tutorial for practicing their usages. I use each commits to get familiar to those components step by step. 
+[Google Developers Codelabs](https://codelabs.developers.google.com/) provides a bunch of guided tutorials for practicing their usages. I use each commit to get familiar with those components step by step. 
 
 
 ### Coroutine
@@ -13,5 +13,10 @@
 
 ### Compose
 * [Jetpack Compose basics](https://developer.android.com/codelabs/jetpack-compose-basics?hl=en#0)
+-- https://github.com/googlecodelabs/android-compose-codelabs
+-- https://developer.android.com/jetpack/compose/setup
+-- https://developer.android.com/jetpack/compose/animation
+-- https://material.io/design/introduction
+-- https://material.io/components/buttons/android
 * [Jetpack Compose Navigation](https://developer.android.com/codelabs/jetpack-compose-navigation?hl=en#0)
 * [Layouts in Jetpack Compose](https://developer.android.com/codelabs/jetpack-compose-layouts?hl=en#0)

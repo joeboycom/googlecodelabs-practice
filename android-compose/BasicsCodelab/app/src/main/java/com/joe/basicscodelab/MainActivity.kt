@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +31,12 @@ fun MyApp() {
 
     // add the logic to show the different screens in MyApp, and hoist the state.
     // shouldShowOnboarding is using a by keyword instead of the =. This is a property delegate that saves you from typing .value every time.
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    // var shouldShowOnboarding by remember { mutableStateOf(true) }
+
+    // The remember function works only as long as the composable is kept in the Composition. When you rotate, the whole activity is restarted so all state is lost.
+    // This also happens with any configuration change and on process death.
+    // Instead of using remember you can use rememberSaveable. This will save each state surviving configuration changes (such as rotations) and process death.
+    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
 
     // In Compose you don't hide UI elements. Instead, you simply don't add them to the composition,
     // so they're not added to the UI tree that Compose generates.

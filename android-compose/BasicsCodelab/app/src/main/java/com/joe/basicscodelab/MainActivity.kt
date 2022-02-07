@@ -1,5 +1,6 @@
 package com.joe.basicscodelab
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.joe.basicscodelab.ui.theme.BasicsCodelabTheme
@@ -125,8 +127,17 @@ private fun Greeting(name: String) {
         Row(modifier = Modifier.padding(24.dp)) {
             // Note that we are also making sure that padding is never negative, otherwise it could crash the app. This introduces a subtle animation bug that we'll fix later in Finishing touches.
             Column(modifier = Modifier.weight(1f).padding(bottom = extraPadding.coerceAtLeast(0.dp))) {
-            Text(text = "Hello, ")
-                Text(text = name)
+                Text(text = "Hello, ")
+
+                // Because BasicsCodelabTheme wraps MaterialTheme internally, MyApp is styled with the properties defined in the theme.
+                // From any descendant composable you can retrieve three properties of MaterialTheme: colors, typography and shapes.
+                // modify a predefined style by using the copy function. Make the number extra bold
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.h4.copy(
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                )
             }
             OutlinedButton(
                 onClick = { expanded = !expanded }
@@ -137,8 +148,13 @@ private fun Greeting(name: String) {
     }
 }
 
-// set dimensions or added any constraints to the size of your composables
-@Preview(showBackground = true, widthDp = 320)
+@Preview(
+    showBackground = true,
+    widthDp = 320,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+) // now we can see two kinds of ui style
+@Preview(showBackground = true, widthDp = 320) // set dimensions or added any constraints to the size of your composables
 @Composable
 fun DefaultPreview() {
     BasicsCodelabTheme {

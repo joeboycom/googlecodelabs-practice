@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PhotographerCard(modifier: Modifier = Modifier) {
     Row(modifier
-        .padding(16.dp)
         .clickable(onClick = { /* Ignoring onClick */ })
+        .padding(16.dp)
     ) {
         Surface(
             modifier = Modifier.size(50.dp),

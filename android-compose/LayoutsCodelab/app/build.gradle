@@ -61,4 +61,7 @@ dependencies {
 
     // Apart from the icons we listed before, you can use the full list of Material icons by adding a new dependency to the project
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+    // Render image
+    implementation 'io.coil-kt:coil-compose:1.4.0'
 }

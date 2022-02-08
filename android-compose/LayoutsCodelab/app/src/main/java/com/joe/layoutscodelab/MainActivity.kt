@@ -3,14 +3,13 @@ package com.joe.layoutscodelab
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LayoutsCodelabTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+                Surface(modifier = Modifier.wrapContentSize(), color = MaterialTheme.colors.background) {
                     PhotographerCard()
                 }
             }
@@ -32,8 +31,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun PhotographerCard() {
-    Row {
+fun PhotographerCard(modifier: Modifier = Modifier) {
+    Row(modifier
+        .padding(16.dp)
+        .clickable(onClick = { /* Ignoring onClick */ })
+    ) {
         Surface(
             modifier = Modifier.size(50.dp),
             shape = CircleShape,
@@ -41,7 +43,11 @@ fun PhotographerCard() {
         ) {
             // Image goes here
         }
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .align(Alignment.CenterVertically)
+        ) {
             Text("Alfred Sisley", fontWeight = FontWeight.Bold)
             // LocalContentAlpha is defining opacity level of its children
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {

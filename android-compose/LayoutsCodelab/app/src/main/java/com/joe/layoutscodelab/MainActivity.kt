@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -24,12 +26,56 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LayoutsCodelabTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.wrapContentSize(), color = MaterialTheme.colors.background) {
-                    PhotographerCard()
-                }
+                LayoutsCodelab()
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun LayoutsCodelabPreview() {
+    LayoutsCodelabTheme {
+        LayoutsCodelab()
+    }
+}
+
+@Composable
+fun LayoutsCodelab() {
+    // Scaffold allows you to implement a UI with the basic Material Design layout structure.
+    // It provides slots for the most common top-level Material components such as TopAppBar, BottomAppBar, FloatingActionButton and Drawer.
+    // With Scaffold, you make sure these components will be positioned and work together correctly.
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "LayoutsCodelab")
+                },
+                // The slot for action items in the top AppBar is the actions parameter that internally uses a Row,
+                // so multiple actions will be placed horizontally. In order to use one of the predefined icons, we can use the IconButton composable with an Icon inside it
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = null)
+                    }
+                }
+            )
+        }
+    ) {
+        // All parameters in the Scaffold API are optional except the body content that is of
+        // type @Composable (InnerPadding) -> Unit: the lambda receives a padding as a parameter.
+        // That's the padding that should be applied to the content root composable to constrain the items appropriately on the screen
+            innerPadding ->
+        // Apply the modifier when calling the composable that will add the extra padding just when needed
+        BodyContent(Modifier.padding(innerPadding).padding(8.dp))
+    }
+}
+
+@Composable
+fun BodyContent(modifier: Modifier = Modifier) {
+    // Apply the modifier to the only direct child inside the composable so that all calls to BodyContent apply the extra padding
+    Column(modifier = modifier.padding(8.dp)) {
+        Text(text = "Hi there!")
+        Text(text = "Thanks for going through the Layouts codelab")
     }
 }
 

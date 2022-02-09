@@ -143,7 +143,8 @@ fun BodyContent(modifier: Modifier = Modifier) {
 //        }
 
 //        ConstraintLayoutContent()
-        LargeConstraintLayout()
+//        LargeConstraintLayout()
+        TwoTexts(text1 = "Hello", text2 = "World")
 //    }
 }
 

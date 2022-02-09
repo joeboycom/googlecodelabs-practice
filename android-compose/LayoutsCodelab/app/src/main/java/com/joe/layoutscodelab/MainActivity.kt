@@ -1,5 +1,7 @@
 package com.joe.layoutscodelab
 
+import ConstraintLayoutContent
+import LargeConstraintLayout
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -91,7 +93,7 @@ val topics = listOf(
 @Composable
 fun BodyContent(modifier: Modifier = Modifier) {
     // Apply the modifier to the only direct child inside the composable so that all calls to BodyContent apply the extra padding
-    Column(modifier = modifier.padding(8.dp)) {
+//    Column(modifier = modifier.padding(8.dp)) {
 //        Text(text = "Hi there!")
 //        Text(text = "Thanks for going through the Layouts codelab")
 //        ScrollingList()
@@ -111,7 +113,7 @@ fun BodyContent(modifier: Modifier = Modifier) {
 //        }
 
         // we can make our BodyContent scrollable by just wrapping the StaggeredGrid in a scrollable Row and passing the modifier to it instead of StaggeredGrid.
-        Row(
+//        Row(
             // First, modifiers will update the constraints from left to right, and then, they return back the size from right to left. Let's see this better with an example:
             // Because the constraints are propagated through the chain from left to right,
             // the constraints with which the content of the Row to be measured are (200-16-16)=168 dp for both minimum and maximum width and height.
@@ -127,19 +129,22 @@ fun BodyContent(modifier: Modifier = Modifier) {
             // Therefore, the StaggeredGrid will be constrained to 200 dp for both minimum and maximum width and height.
             // The StaggeredGrid size is 200x200 dp and as the size is modified from right to left,
             // the padding modifier will increment the size to (200+16+16)x(200+16+16)=232x232 that will be the final size of the Row as well.
-            modifier = modifier
-                .background(color = Color.LightGray, shape = RectangleShape)
-                .padding(16.dp)
-                .size(200.dp)
-                .horizontalScroll(rememberScrollState())
-        ) {
-            StaggeredGrid {
-                for (topic in topics) {
-                    Chip(modifier = Modifier.padding(8.dp), text = topic)
-                }
-            }
-        }
-    }
+//            modifier = modifier
+//                .background(color = Color.LightGray, shape = RectangleShape)
+//                .padding(16.dp)
+//                .size(200.dp)
+//                .horizontalScroll(rememberScrollState())
+//        ) {
+//            StaggeredGrid {
+//                for (topic in topics) {
+//                    Chip(modifier = Modifier.padding(8.dp), text = topic)
+//                }
+//            }
+//        }
+
+//        ConstraintLayoutContent()
+        LargeConstraintLayout()
+//    }
 }
 
 @Composable

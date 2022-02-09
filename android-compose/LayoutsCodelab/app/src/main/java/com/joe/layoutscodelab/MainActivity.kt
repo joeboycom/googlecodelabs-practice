@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
@@ -110,7 +111,28 @@ fun BodyContent(modifier: Modifier = Modifier) {
 //        }
 
         // we can make our BodyContent scrollable by just wrapping the StaggeredGrid in a scrollable Row and passing the modifier to it instead of StaggeredGrid.
-        Row(modifier = modifier.horizontalScroll(rememberScrollState())) {
+        Row(
+            // First, modifiers will update the constraints from left to right, and then, they return back the size from right to left. Let's see this better with an example:
+            // Because the constraints are propagated through the chain from left to right,
+            // the constraints with which the content of the Row to be measured are (200-16-16)=168 dp for both minimum and maximum width and height.
+            // This means that the size of the StaggeredGrid will be exactly 168x168 dp.
+            // Therefore, the final size of the scrollable Row, after the modifySize chain is run from right to left, will be 200x200 dp.
+//            modifier = modifier
+//                .background(color = Color.LightGray)
+//                .size(200.dp)
+//                .padding(16.dp)
+//                .horizontalScroll(rememberScrollState())
+
+            // In this case, the constraints that the scrollable Row and padding had originally will be coerced to the size constraints to measure the children.
+            // Therefore, the StaggeredGrid will be constrained to 200 dp for both minimum and maximum width and height.
+            // The StaggeredGrid size is 200x200 dp and as the size is modified from right to left,
+            // the padding modifier will increment the size to (200+16+16)x(200+16+16)=232x232 that will be the final size of the Row as well.
+            modifier = modifier
+                .background(color = Color.LightGray, shape = RectangleShape)
+                .padding(16.dp)
+                .size(200.dp)
+                .horizontalScroll(rememberScrollState())
+        ) {
             StaggeredGrid {
                 for (topic in topics) {
                     Chip(modifier = Modifier.padding(8.dp), text = topic)

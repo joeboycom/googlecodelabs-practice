@@ -18,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
@@ -80,18 +81,41 @@ fun LayoutsCodelab() {
     }
 }
 
+val topics = listOf(
+    "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
+    "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
+    "Religion", "Social sciences", "Technology", "TV", "Writing"
+)
+
 @Composable
 fun BodyContent(modifier: Modifier = Modifier) {
     // Apply the modifier to the only direct child inside the composable so that all calls to BodyContent apply the extra padding
     Column(modifier = modifier.padding(8.dp)) {
-        Text(text = "Hi there!")
-        Text(text = "Thanks for going through the Layouts codelab")
+//        Text(text = "Hi there!")
+//        Text(text = "Thanks for going through the Layouts codelab")
 //        ScrollingList()
-        MyOwnColumn(modifier.padding(8.dp)) {
-            Text("MyOwnColumn")
-            Text("places items")
-            Text("vertically.")
-            Text("We've done it by hand!")
+//        MyOwnColumn(modifier.padding(8.dp)) {
+//            Text("MyOwnColumn")
+//            Text("places items")
+//            Text("vertically.")
+//            Text("We've done it by hand!")
+//        }
+
+        // Even though adding rows to five, there are still some items can not be seen.
+        // As depending on the number of rows, our topics can go off the screen
+//        StaggeredGrid(modifier = modifier, rows = 5) {
+//            for (topic in topics) {
+//                Chip(modifier = Modifier.padding(8.dp), text = topic)
+//            }
+//        }
+
+        // we can make our BodyContent scrollable by just wrapping the StaggeredGrid in a scrollable Row and passing the modifier to it instead of StaggeredGrid.
+        Row(modifier = modifier.horizontalScroll(rememberScrollState())) {
+            StaggeredGrid {
+                for (topic in topics) {
+                    Chip(modifier = Modifier.padding(8.dp), text = topic)
+                }
+            }
         }
     }
 }
@@ -286,3 +310,111 @@ fun MyOwnColumn(
 //        // measure and position children given constraints logic here
 //    }
 //}
+
+// If we wanted to make the grid reusable on different orientations, we could take as a parameter the number of rows we want to have on the screen.
+// Remember you can only measure your children once.
+@Composable
+fun StaggeredGrid(
+    modifier: Modifier = Modifier,
+    rows: Int = 3,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+
+        // 1.
+        // For our use case, we won't constrain our child views further.
+        // When measuring our children, we should also keep track of what's the width and the max height of each row
+
+        // Keep track of the width of each row
+        val rowWidths = IntArray(rows) { 0 }
+
+        // Keep track of the max height of each row
+        val rowHeights = IntArray(rows) { 0 }
+
+        // Don't constrain child views further, measure them with given constraints
+        // List of measured children
+        val placeables = measurables.mapIndexed { index, measurable ->
+
+            // Measure each child
+            val placeable = measurable.measure(constraints)
+
+            // Track the width and max height of each row
+            val row = index % rows
+            rowWidths[row] += placeable.width
+            rowHeights[row] = Math.max(rowHeights[row], placeable.height)
+
+            placeable
+        }
+
+        // 2.
+        // Now that we have the list of measured children in our logic, before positioning them on the screen, we need to calculate the size of our grid (full width and height).
+        // Also, since we already know the maximum height of each row, we can calculate where we'll position the elements for each row in the Y position.
+        // We save the Y positions in the rowY variable
+
+        // Grid's width is the widest row
+        val width = rowWidths.maxOrNull()
+            ?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth)) ?: constraints.minWidth
+
+        // Grid's height is the sum of the tallest element of each row
+        // coerced to the height constraints
+        val height = rowHeights.sumOf { it }
+            .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
+
+        // Y of each row, based on the height accumulation of previous rows
+        val rowY = IntArray(rows) { 0 }
+        for (i in 1 until rows) {
+            rowY[i] = rowY[i-1] + rowHeights[i-1]
+        }
+
+        // 3.
+        // Lastly, we position our children on the screen by calling placeable.placeRelative(x, y).
+        // In our use case, we also keep track of the X coordinate for each row in the rowX variable
+
+        // Set the size of the parent layout
+        layout(width, height) {
+            // x cord we have placed up to, per row
+            val rowX = IntArray(rows) { 0 }
+
+            placeables.forEachIndexed { index, placeable ->
+                val row = index % rows
+                placeable.placeRelative(
+                    x = rowX[row],
+                    y = rowY[row]
+                )
+                rowX[row] += placeable.width
+            }
+        }
+    }
+}
+
+@Composable
+fun Chip(modifier: Modifier = Modifier, text: String) {
+    Card(
+        modifier = modifier,
+        border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier.size(16.dp, 16.dp)
+                    .background(color = MaterialTheme.colors.secondary)
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(text = text)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ChipPreview() {
+    LayoutsCodelabTheme {
+        Chip(text = "Hi there")
+    }
+}

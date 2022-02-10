@@ -56,4 +56,8 @@ private fun TodoActivityScreen(todoViewModel: TodoViewModel) {
     // You can also generate a lambda that calls a single method using the method reference syntax.
     // This will create a lambda out of a method call. Using method reference syntax,
     // onAddItem above can also be expressed as onAddItem = todoViewModel.addItem(it) -> onAddItem = todoViewModel::addItem.
+
+    // Recomposition is the process of calling composables again with new inputs to update the compose tree.
+    // In this case when TodoScreen is called again with a new list, LazyColumn will recompose all of the children on the screen.
+    // This will then call TodoRow again, generating a new random tint.
 }

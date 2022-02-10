@@ -22,6 +22,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import com.codelabs.state.ui.StateCodelabTheme
 
 class TodoActivity : AppCompatActivity() {
@@ -42,10 +44,16 @@ class TodoActivity : AppCompatActivity() {
 
 @Composable
 private fun TodoActivityScreen(todoViewModel: TodoViewModel) {
-    val items = listOf<TodoItem>()
+    // by is the property delegate syntax in Kotlin, it lets us automatically unwrap the State<List<TodoItem>> from observeAsState into a regular List<TodoItem>
+    // .observeAsState observes a LiveData<T> and converts it into a State<T> object so Compose can react to value changes
+    val items: List<TodoItem> by todoViewModel.todoItems.observeAsState(listOf())
     TodoScreen(
         items = items,
-        onAddItem = { },
-        onRemoveItem = { }
+        onAddItem = { todoViewModel.addItem(it) },
+        onRemoveItem = { todoViewModel.removeItem(it) }
     )
+    // Kotlin tip:
+    // You can also generate a lambda that calls a single method using the method reference syntax.
+    // This will create a lambda out of a method call. Using method reference syntax,
+    // onAddItem above can also be expressed as onAddItem = todoViewModel.addItem(it) -> onAddItem = todoViewModel::addItem.
 }

@@ -51,7 +51,7 @@ fun TodoScreen(
     Column {
         // add TodoItemInputBackground and TodoItem at the top of TodoScreen
         TodoItemInputBackground(elevate = true, modifier = Modifier.fillMaxWidth()) {
-            TodoItemInput(onItemComplete = onAddItem)
+            TodoItemEntryInput(onItemComplete = onAddItem)
         }
 
         LazyColumn(
@@ -113,10 +113,11 @@ private fun randomTint(): Float {
 
 @Preview
 @Composable
-fun PreviewTodoItemInput() = TodoItemInput(onItemComplete = { })
+fun PreviewTodoItemInput() = TodoItemEntryInput(onItemComplete = { })
 
+// The stateful composable doesn't have any UI-related code.
 @Composable
-fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
+fun TodoItemEntryInput(onItemComplete: (TodoItem) -> Unit) {
     val (text, setText) = remember { mutableStateOf("") }
     val (icon, setIcon) = remember { mutableStateOf(TodoIcon.Default)}
     val iconsVisible = text.isNotBlank()
@@ -126,14 +127,21 @@ fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
         setIcon(TodoIcon.Default)
     }
 
+    TodoItemInput(text, setText, icon, setIcon, submit, iconsVisible)
+}
+
+// The stateless composable has all of our UI-related code
+@Composable
+fun TodoItemInput(text: String, onTextChange: (String) -> Unit, icon: TodoIcon, onIconChange: (TodoIcon) -> Unit, submit: () -> Unit, iconsVisible: Boolean) {
     Column {
-        Row(Modifier
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp)
+        Row(
+            Modifier
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp)
         ) {
             TodoInputText(
                 text = text,
-                onTextChange = setText,
+                onTextChange = onTextChange,
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -152,7 +160,7 @@ fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
         // Since compose can dynamically change the composition, you do not need to set visibility gone.
         // Instead, remove composables from the composition.
         if (iconsVisible) {
-            AnimatedIconRow(icon, setIcon, Modifier.padding(top = 8.dp))
+            AnimatedIconRow(icon, onIconChange, Modifier.padding(top = 8.dp))
         } else {
             Spacer(modifier = Modifier.height(16.dp))
         }

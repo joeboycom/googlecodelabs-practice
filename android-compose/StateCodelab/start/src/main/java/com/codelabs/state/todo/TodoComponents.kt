@@ -209,13 +209,16 @@ fun TodoInputText(
     modifier: Modifier = Modifier,
     onImeAction: () -> Unit = {}
 ) {
+    // To control the software keyboard, we'll use LocalSoftwareKeyboardController.current. Because this is an experimental API, we'll have to annotate the function with @OptIn(ExperimentalComposeUiApi::class).
     val keyboardController = LocalSoftwareKeyboardController.current
     TextField(
         value = text,
         onValueChange = onTextChange,
         colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),
         maxLines = 1,
+        // keyboardOptions - used to enable showing the Done IME action
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+        // keyboardActions - used to specify the action to be triggered in response to specific IME actions triggered - in our case, once Done is pressed, we want submit to be called and the keyboard to be hidden.
         keyboardActions = KeyboardActions(onDone = {
             onImeAction()
             keyboardController?.hide()

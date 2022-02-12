@@ -17,6 +17,7 @@
 package com.codelabs.state.todo
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,9 +28,19 @@ class TodoViewModel : ViewModel() {
     //private var _todoItems = MutableLiveData(listOf<TodoItem>())
     //val todoItems: LiveData<List<TodoItem>> = _todoItems
 
+    // For State<T> transformations to work, the state must be read from a State<T> object.
+    //If you had defined currentEditPosition as a regular Int (private var currentEditPosition = -1), compose would not be able to observe changes to it.
+    //
+    // private state
+    private var currentEditPosition by mutableStateOf(-1)
+
     // state: todoItems
     var todoItems = mutableStateListOf<TodoItem>()
         private set
+
+    // state
+    val currentEditItem: TodoItem?
+        get() = todoItems.getOrNull(currentEditPosition)
 
     // event: addItem
     fun addItem(item: TodoItem) {
@@ -39,5 +50,26 @@ class TodoViewModel : ViewModel() {
     // event: removeItem
     fun removeItem(item: TodoItem) {
         todoItems.remove(item)
+        onEditDone() // don't keep the editor open when removing items
+    }
+
+    // event: onEditItemSelected
+    fun onEditItemSelected(item: TodoItem) {
+        currentEditPosition = todoItems.indexOf(item)
+    }
+
+    // event: onEditDone
+    fun onEditDone() {
+        currentEditPosition = -1
+    }
+
+    // event: onEditItemChange
+    fun onEditItemChange(item: TodoItem) {
+        val currentItem = requireNotNull(currentEditItem)
+        require(currentItem.id == item.id) {
+            "You can only change an item with the same id as currentEditItem"
+        }
+
+        todoItems[currentEditPosition] = item
     }
 }

@@ -46,11 +46,11 @@ class TodoActivity : AppCompatActivity() {
 private fun TodoActivityScreen(todoViewModel: TodoViewModel) {
     // by is the property delegate syntax in Kotlin, it lets us automatically unwrap the State<List<TodoItem>> from observeAsState into a regular List<TodoItem>
     // .observeAsState observes a LiveData<T> and converts it into a State<T> object so Compose can react to value changes
-    val items: List<TodoItem> by todoViewModel.todoItems.observeAsState(listOf())
+    //    val items: List<TodoItem> by todoViewModel.todoItems.observeAsState(listOf())
     TodoScreen(
-        items = items,
-        onAddItem = { todoViewModel.addItem(it) },
-        onRemoveItem = { todoViewModel.removeItem(it) }
+        items = todoViewModel.todoItems,
+        onAddItem = todoViewModel::addItem,
+        onRemoveItem = todoViewModel::removeItem
     )
     // Kotlin tip:
     // You can also generate a lambda that calls a single method using the method reference syntax.

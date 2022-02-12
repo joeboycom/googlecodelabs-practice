@@ -150,21 +150,31 @@ fun PreviewTodoItemInput() = TodoItemEntryInput(onItemComplete = { })
 // The stateful composable doesn't have any UI-related code.
 @Composable
 fun TodoItemEntryInput(onItemComplete: (TodoItem) -> Unit) {
-    val (text, setText) = remember { mutableStateOf("") }
-    val (icon, setIcon) = remember { mutableStateOf(TodoIcon.Default)}
-    val iconsVisible = text.isNotBlank()
+    val (text, onTextChange) = remember { mutableStateOf("") }
+    val (icon, onIconChange) = remember { mutableStateOf(TodoIcon.Default)}
     val submit = {
-        onItemComplete(TodoItem(text, icon)) // send onItemComplete event up
-        setText("") // clear the internal text
-        setIcon(TodoIcon.Default)
+        if (text.isNotBlank()) {
+            onItemComplete(TodoItem(text, icon)) // send onItemComplete event up
+            onTextChange("") // clear the internal text
+            onIconChange(TodoIcon.Default)
+        }
     }
 
-    TodoItemInput(text, setText, icon, setIcon, submit, iconsVisible)
+    TodoItemInput(text, onTextChange = onTextChange, icon, onIconChange = onIconChange, submit, iconsVisible = text.isNotBlank()) {
+        TodoEditButton(onClick = submit, text = "Add", enabled = text.isNotBlank())
+    }
 }
 
 // The stateless composable has all of our UI-related code
 @Composable
-fun TodoItemInput(text: String, onTextChange: (String) -> Unit, icon: TodoIcon, onIconChange: (TodoIcon) -> Unit, submit: () -> Unit, iconsVisible: Boolean) {
+fun TodoItemInput(
+    text: String,
+    onTextChange: (String) -> Unit,
+    icon: TodoIcon,
+    onIconChange: (TodoIcon) -> Unit,
+    submit: () -> Unit,
+    iconsVisible: Boolean,
+    buttonSlot: @Composable() () -> Unit,) {
     Column {
         Row(
             Modifier
@@ -179,13 +189,13 @@ fun TodoItemInput(text: String, onTextChange: (String) -> Unit, icon: TodoIcon, 
                     .padding(end = 8.dp),
                 onImeAction = submit // pass the submit callback to TodoInputText
             )
-            // edit TodoItemInput
-            TodoEditButton(
-                onClick = submit, // pass the submit callback to TodoEditButton
-                text = "Add",
-                modifier = Modifier.align(Alignment.CenterVertically),
-                enabled = text.isNotBlank() // enable if text is not blank
-            )
+
+            // New code: Replace the call to TodoEditButton with the content of the slot
+            //
+            // We could directly call buttonSlot(), but we need to keep the align to center whatever the caller passes us vertically.
+            // To do that, we place the slot in a Box which is a basic composable.
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(Modifier.align(Alignment.CenterVertically)) { buttonSlot() }
         }
 
         // There is no "visibility" property in compose.
@@ -243,5 +253,24 @@ fun TodoItemInlineEditor(
     icon = item.icon,
     onIconChange = { onEditItemChange(item.copy(icon = it)) },
     submit = onEditDone,
-    iconsVisible = true
+    iconsVisible = true,
+    buttonSlot = {
+        Row {
+            val shrinkButtons = Modifier.widthIn(20.dp)
+            TextButton(onClick = onEditDone, modifier = shrinkButtons) {
+                Text(
+                    text = "\uD83D\uDCBE", // floppy disk
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.width(30.dp)
+                )
+            }
+            TextButton(onClick = onRemoveItem, modifier = shrinkButtons) {
+                Text(
+                    text = "❌",
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.width(30.dp)
+                )
+            }
+        }
+    }
 )

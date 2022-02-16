@@ -47,6 +47,9 @@ class MainActivity : AppCompatActivity() {
 
         // Set up Action Bar
         val navController = host.navController
+        // NavController is powerful because when you call methods like navigate() or popBackStack(),
+        // it translates these commands into the appropriate framework operations based on the type of destination you are navigating to or from.
+        // For example, when you call navigate() with an activity destination, the NavController calls startActivity() on your behalf.
 
         appBarConfiguration = AppBarConfiguration(navController.graph)
 

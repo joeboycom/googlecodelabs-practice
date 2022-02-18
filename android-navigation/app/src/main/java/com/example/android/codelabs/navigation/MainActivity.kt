@@ -18,7 +18,6 @@ package com.example.android.codelabs.navigation
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -28,7 +27,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.ui.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -76,7 +74,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             Toast.makeText(this@MainActivity, "Navigated to $dest", Toast.LENGTH_SHORT).show()
-            Log.d("NavigationActivity", "Navigated to $dest")
         }
     }
 
@@ -115,16 +112,23 @@ class MainActivity : AppCompatActivity() {
             menuInflater.inflate(R.menu.overflow_menu, menu)
             return true
         }
+
         return retValue
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
+        // return super.onOptionsItemSelected(item)
         // TODO STEP 9.2 - Have Navigation UI Handle the item selection - make sure to delete
         //  the old return statement above
         // Have the NavigationUI look for an action or destination matching the menu
         // item id and navigate there if found.
         // Otherwise, bubble up to the parent.
+
+        when(item.itemId) {
+            R.id.shopping_cart -> findNavController(R.id.my_nav_host_fragment).navigate(R.id.settings_dest, null)
+
+        }
+
         return item.onNavDestinationSelected(findNavController(R.id.my_nav_host_fragment)) || super.onOptionsItemSelected(item)
         // TODO END STEP 9.2
     }
@@ -133,6 +137,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         // Allows NavigationUI to support proper up navigation or the drawer layout
         // drawer menu, depending on the situation
+
         return findNavController(R.id.my_nav_host_fragment).navigateUp(appBarConfiguration)
     }
     // TODO END STEP 9.7
